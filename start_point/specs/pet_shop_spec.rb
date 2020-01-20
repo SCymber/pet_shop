@@ -81,96 +81,146 @@ class TestPetShop < Minitest::Test
   end
 
   def test_pet_shop_name
-    name = pet_shop_name(@pet_shop)
-    assert_equal("Camelot of Pets", name)
+    def pet_shop_name(shop)
+  name = pet_shop_name(@pet_shop)
+  assert_equal("Camelot of Pets", name)
+  return shop[:name]
   end
+end
 
-  # def test_total_cash
-  #   sum = total_cash(@pet_shop)
-  #   assert_equal(1000, sum)
-  # end
+  def test_total_cash
+    def total_cash(shop)
+    sum = total_cash(@pet_shop)
+    assert_equal(1000, sum)
+    return shop[:admin][:total_cash]
+  end
+end
 
-  # def test_add_or_remove_cash__add
-  #   add_or_remove_cash(@pet_shop,10)
-  #   cash = total_cash(@pet_shop)
-  #   assert_equal(1010, cash)
-  # end
+  def test_add_or_remove_cash__add
+    def add_or_remove_cash__add(shop, amount)
+    add_or_remove_cash(@pet_shop,10)
+    cash = total_cash(@pet_shop)
+    assert_equal(1010, cash)
+    shop[:admin][:total_cash] += amount
+  end
+end
 
-  # def test_add_or_remove_cash__remove
-  #   add_or_remove_cash(@pet_shop,-10)
-  #   cash = total_cash(@pet_shop)
-  #   assert_equal(990, cash)
-  # end
+  def test_add_or_remove_cash__remove
+    def test_add_or_remove_cash__remove(shop, amount)
+    add_or_remove_cash(@pet_shop,-10)
+    cash = total_cash(@pet_shop)
+    assert_equal(990, cash)
+    shop[:admin][:total_cash] -= amount
 
-  # def test_pets_sold
-  #   sold = pets_sold(@pet_shop)
-  #   assert_equal(0, sold)
-  # end
+  end
+end
 
-  # def test_increase_pets_sold
-  #   increase_pets_sold(@pet_shop,2)
-  #   sold = pets_sold(@pet_shop)
-  #   assert_equal(2, sold)
-  # end
+  def test_pets_sold
+    def pets_sold(shop)
+    sold = pets_sold(@pet_shop)
+    assert_equal(0, sold)
+    return shop[:admin][:pets_sold]
+  end
+end
 
-  # def test_stock_count
-  #   count = stock_count(@pet_shop)
-  #   assert_equal(6, count)
-  # end
+  def test_increase_pets_sold
+    def increase_pets_sold(shop, amount)
+    increase_pets_sold(@pet_shop,2)
+    sold = pets_sold(@pet_shop)
+    assert_equal(2, sold)
+    shop[:admin][:pets_sold] += amount
+  end
+end
 
-  # def test_all_pets_by_breed__found
-  #   pets = pets_by_breed(@pet_shop, "British Shorthair")
-  #   assert_equal(2, pets.count)
-  # end
+  def test_stock_count
+    def stock_count(shop)
+    count = stock_count(@pet_shop)
+    assert_equal(6, count)
+    return shop[:pets].count
+  end
+end
 
-  # def test_all_pets_by_breed__not_found
-  #   pets = pets_by_breed(@pet_shop, "Dalmation")
-  #   assert_equal(0, pets.count)
-  # end
+  def test_all_pets_by_breed__found
+    def pets_by_breed(shop, breed)
+    pets = pets_by_breed(@pet_shop, "British Shorthair")
+    assert_equal(2, pets.count)
+    return shop[:pets].select{|e| e[:breed] == breed}
+  end
+end
 
-  # def test_find_pet_by_name__returns_pet
-  #   pet = find_pet_by_name(@pet_shop, "Arthur")
-  #   assert_equal("Arthur", pet[:name])
-  # end
+  def test_all_pets_by_breed__not_found
+    def pets_by_breed(shop, breed)
+    pets = pets_by_breed(@pet_shop, "Dalmation")
+    assert_equal(0, pets.count)
+    return shop[:pets].select{|e| e[:breed] == breed}
+  end
+end
 
-  # def test_find_pet_by_name__returns_nil
-  #   pet = find_pet_by_name(@pet_shop, "Fred")
-  #   assert_nil(pet)
-  # end
+  def test_find_pet_by_name__returns_pet
+    def find_pet_by_name(shop, name)
+    pet = find_pet_by_name(@pet_shop, "Arthur")
+    assert_equal("Arthur", pet[:name])
+    shop[:pets].select {|e| e[:name] == name}[0]
+  end
+end
 
-  # def test_remove_pet_by_name
-  #   remove_pet_by_name(@pet_shop, "Arthur")
-  #   pet = find_pet_by_name(@pet_shop,"Arthur")
-  #   assert_nil(pet)
-  # end
+  def test_find_pet_by_name__returns_nil
+    def find_pet_by_name(shop, name)
+    pet = find_pet_by_name(@pet_shop, "Fred")
+    assert_nil(pet)
+    shop[:pets].select {|e| e[:name] == name}[0]
+  end
+end
 
-  # def test_add_pet_to_stock
-  #   add_pet_to_stock(@pet_shop, @new_pet)
-  #   count = stock_count(@pet_shop)
-  #   assert_equal(7, count)
-  # end
+  def test_remove_pet_by_name
+    def remove_pet_by_name(shop, name)
+    remove_pet_by_name(@pet_shop, "Arthur")
+    pet = find_pet_by_name(@pet_shop,"Arthur")
+    assert_nil(pet)
+    shop[:pets].reject! {|e| e[:name] == name}
+  end
+end
 
-  # def test_customer_cash
-  #   cash = customer_cash(@customers[0])
-  #   assert_equal(1000, cash)
-  # end
+  def test_add_pet_to_stock
+    def add_pet_to_stock(shop, pet)
+    add_pet_to_stock(@pet_shop, @new_pet)
+    count = stock_count(@pet_shop)
+    assert_equal(7, count)
+    shop[:pets].push(pet)
+  end
+end
 
-  # def test_remove_customer_cash
-  #   customer = @customers[0]
-  #   remove_customer_cash(customer, 100)
-  #   assert_equal(900, customer[:cash])
-  # end
+  def test_customer_cash
+    def customer_cash
+    cash = customer_cash(@customers[0])
+    assert_equal(1000, cash)
+  end
+end
 
-  # def test_customer_pet_count
-  #   count = customer_pet_count(@customers[0])
-  #   assert_equal(0, count)
-  # end
+  def test_remove_customer_cash
+    def remove_customer_cash
+    customer = @customers[0]
+    remove_customer_cash(customer, 100)
+    assert_equal(900, customer[:cash])
+  end
+end
 
-  # def test_add_pet_to_customer
-  #   customer = @customers[0]
-  #   add_pet_to_customer(customer, @new_pet)
-  #   assert_equal(1, customer_pet_count(customer))
-  # end
+  def test_customer_pet_count
+    def customer_pet_count(customer)
+    count = customer_pet_count(@customers[0])
+    assert_equal(0, count)
+    return customer[:pets].count
+  end
+end
+
+  def test_add_pet_to_customer
+    def add_pet_to_customer(customer, pet)
+    customer = @customers[0]
+    add_pet_to_customer(customer, @new_pet)
+    assert_equal(1, customer_pet_count(customer))
+    customer[:pets].push(pet)
+  end
+end
 
   # --- OPTIONAL ---
 
